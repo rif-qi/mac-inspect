@@ -1,0 +1,31 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: ShellCheck
+        run: shellcheck --severity=error mac-inspect.sh
+
+  run-on-macos:
+    runs-on: macos-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax check with the Bash that ships with macOS
+        run: /bin/bash -n mac-inspect.sh
+      - name: Flags
+        run: |
+          /bin/bash mac-inspect.sh --help
+          /bin/bash mac-inspect.sh --version
+          if /bin/bash mac-inspect.sh --bogus; then echo "unknown option should fail"; exit 1; fi
+      - name: Full report (the runner is a virtual machine, so a VM flag is expected)
+        run: NO_COLOR=1 /bin/bash mac-inspect.sh
