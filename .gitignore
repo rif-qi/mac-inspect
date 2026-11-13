@@ -1,0 +1,4 @@
+.DS_Store
+# local-only helpers (not part of the repo)
+mac-inspect-paste.txt
+PUBLISHING-STEPS.md
